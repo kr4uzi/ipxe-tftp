@@ -12,6 +12,7 @@ To see if your hardware is affected by this, compile the pxeinfo:\
 This folder contains a very basic verification EFI which prints out the loaded file path - which if empty means that the currentl running firmware doesn't support iPXE's automatic shim loading.
 
 # Setup
+Copy tftp.py and ipxe-tftp.service to /srv/ipxe-tftp, then install the dependency:
 ```sh
 python3 -m venv .venv
 source .venv/bin/activate
