@@ -1,0 +1,12 @@
+[Unit]
+Description=iPXE Readonly TFTP Server
+After=network.target
+Wants=network-online.target
+
+[Service]
+Restart=always
+Type=simple
+ExecStart=/srv/ipxe-tftp/.venv/bin/python /srv/ipxe-tftp/tftp.py
+
+[Install]
+WantedBy=multi-user.target
