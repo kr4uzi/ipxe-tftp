@@ -1,0 +1,5 @@
+.venv
+pxeinfo/pxeinfox64.*
+pxeinfo/pxeinfoia32.*
+pxeinfo/pxeinfoarm.*
+pxeinfo/pxeinfoaa66.*
