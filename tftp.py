@@ -42,9 +42,13 @@ class ShimWorkaroundHandler(BaseHandler):
 
     def _clean_clients(self, timeout):
         now = time.time()
+        timedout = []
         for ip, state in client_states.items():
             if now - state[0] > timeout:
-                client_states.pop(ip)
+                timedout.append(ip)
+
+        for ip in timedout:
+            client_states.pop(ip)
 
     def _resolve_path(self, ip, requested_path):
         if ip not in client_states:
