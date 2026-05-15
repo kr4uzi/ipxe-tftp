@@ -20,8 +20,6 @@ Simply symlink the snonly.efi from the architecture you need to support to the t
 e.g. x86_64:
 ln -s /srv/pxe/ipxeboot/x86_64-sb/snponly.efi /srv/pxe/ipxe.efi
 
-If you need secureboot and ipxe.efi (not snponly.efi) for multiple architectures, do not use the netboot package, but the ISO instead, as there the BOOTX64.EFI and BOOTAA64.EFI are signed directly and *do not need the shim*.
-
 # pxeinfo
 To verify wether a machine is affected by this firmware bug, you can compile (and boot) the small EFI program in the pxeinfo folder in this repository.
 
