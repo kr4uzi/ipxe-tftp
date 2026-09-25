@@ -35,9 +35,10 @@ pip install fbtftp
 chmod +x tftp.py
 ```
 
-The script assumes that the TFTP root is /srv/pxe (adjust line 85 in tftp.py if that's not the case)
+The TFTP root defaults to /srv/pxe. Pass `--root` to serve somewhere else.
 
 # Daemon (systemd)
+Modify the `ipxe-tftp.service` file to specify the TFTP directory, then:
 ```sh
 cp -v ipxe-tftp.service /etc/systemd/system
 systemctl enable ipxe-tftp          #enable service

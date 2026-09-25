@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import time
 import os
 import re
@@ -13,18 +14,26 @@ SHIM_PATTERN = re.compile(r"(\S+)-shim\S*\.([Ee][Ff][Ii])$")
 client_states = {}
 
 class FileResponseData(ResponseData):
+    # No unpicklable objects in the constructor: fbtftp builds this in the parent
+    # process, and Python 3.14 made forkserver the default start method on Linux,
+    # which pickles it. Hence open on first read; the stat stays so a missing file
+    # still raises FileNotFoundError here.
     def __init__(self, path):
+        self._path = path
         self._size = os.stat(path).st_size
-        self._reader = open(path, 'rb')
+        self._reader = None
 
     def read(self, n):
+        if self._reader is None:
+            self._reader = open(self._path, 'rb')
         return self._reader.read(n)
 
     def size(self):
         return self._size
 
     def close(self):
-        self._reader.close()
+        if self._reader is not None:
+            self._reader.close()
 
 def print_session_stats(stats):
     pass
@@ -82,11 +91,24 @@ class ShimWorkaroundServer(BaseServer):
         )
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description='Read-only TFTP server that works around iPXE shim '
+                    'binaries resolving their payload by filename.')
+    parser.add_argument('--root', default='/srv/pxe',
+                        help='directory to serve (default: %(default)s)')
+    parser.add_argument('--address', default='::',
+                        help='address to bind (default: %(default)s)')
+    parser.add_argument('--port', type=int, default=69,
+                        help='port to bind (default: %(default)s)')
+    parser.add_argument('--timeout', type=int, default=5,
+                        help='session timeout in seconds (default: %(default)s)')
+    args = parser.parse_args()
+
     logging.basicConfig()
     logging.getLogger().setLevel(logging.INFO)
     server = ShimWorkaroundServer(
-        address='::', port=69, retries=3, timeout=5,
-        root='/srv/pxe'
+        address=args.address, port=args.port, retries=3, timeout=args.timeout,
+        root=args.root
     )
     try:
         server.run()
