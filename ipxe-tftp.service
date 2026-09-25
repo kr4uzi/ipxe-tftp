@@ -6,7 +6,8 @@ Wants=network-online.target
 [Service]
 Restart=always
 Type=simple
-ExecStart=/srv/ipxe-tftp/.venv/bin/python /srv/ipxe-tftp/tftp.py
+# --root defaults to /srv/pxe; pass it here if the boot tree lives elsewhere.
+ExecStart=/srv/ipxe-tftp/.venv/bin/python /srv/ipxe-tftp/tftp.py --root /srv/pxe
 
 [Install]
 WantedBy=multi-user.target

@@ -35,7 +35,13 @@ pip install fbtftp
 chmod +x tftp.py
 ```
 
-The script assumes that the TFTP root is /srv/pxe (adjust line 85 in tftp.py if that's not the case)
+The TFTP root defaults to /srv/pxe. Pass `--root` to serve somewhere else:
+
+```sh
+./tftp.py --root /srv/boot
+```
+
+`--address`, `--port` and `--timeout` are available too; `--help` lists them.
 
 # Daemon (systemd)
 ```sh
